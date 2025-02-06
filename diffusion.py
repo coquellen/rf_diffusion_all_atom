@@ -44,12 +44,13 @@ def cosine_interp(T, eta_max, eta_min):
     out = eta_max + 0.5*(eta_min-eta_max)*(1+torch.cos((t/T)*np.pi))
     return out 
 
-def get_chi_betaT(max_timestep=100, beta_0=0.01, abar_T=1e-3, method='cosine'):
+def get_chi_betaT(schedule_cache_dir,max_timestep=100, beta_0=0.01, abar_T=1e-3, method='cosine'):
     """
     Function to precalculate beta_T for chi angles (decoded at different time steps, so T in beta_T varies).
     Calculated empirically
     """
-    schedule_cache_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'schedule_cache')
+    if schedule_cache_dir is None:
+        schedule_cache_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'schedule_cache')
     name = os.path.join(schedule_cache_dir, f'T{max_timestep}_beta_0{beta_0}_abar_T{abar_T}_method_{method}.pkl')
 
     if not os.path.exists(name):
@@ -742,7 +743,7 @@ class Diffuser():
                  schedule_kwargs={},
                  chi_kwargs={},
                  var_scale=1.0,
-                 cache_dir='.',
+                 cache_dir=None,
                  partial_T=None,
                  truncation_level=2000
                  ):
@@ -760,7 +761,9 @@ class Diffuser():
         self.crd_scale = crd_scale
         self.var_scale = var_scale
         self.aa_decode_steps=aa_decode_steps
-        self.cache_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cached_schedules')
+        self.cache_dir = cache_dir
+        if self.cache_dir is None:
+            self.cache_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cached_schedules')
 
         # get backbone frame diffuser 
         if so3_type == 'slerp':

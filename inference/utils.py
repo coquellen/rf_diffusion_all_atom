@@ -318,7 +318,8 @@ class Denoise():
                  aa_decode_steps=100,
                  potential_manager=None,
                  softmax_T=1e-5,
-                 partial_T=None):
+                 partial_T=None,
+                 cahce_dir=None):
         """
         
         Parameters:
@@ -343,7 +344,7 @@ class Denoise():
         self.aa_decode_steps=aa_decode_steps
         self.potential_manager = potential_manager
         self._log = logging.getLogger(__name__)
-
+        self.cache_dir = cache_dir
 
         self.schedule, self.alpha_schedule, self.alphabar_schedule = get_beta_schedule(self.T, self.b_0, self.b_T, self.schedule_type, inference=True)
 
@@ -352,7 +353,7 @@ class Denoise():
         chi_b_0 = 0.001
         chi_abar_T=1e-3
         assert max_chi_T >= aa_decode_steps # assume never decoding for more than 100 steps, change if otherwise
-        self.chi_beta_T = get_chi_betaT(max_chi_T, chi_b_0, chi_abar_T, method='cosine') # precalculate chi beta schedules for dynamic T
+        self.chi_beta_T = get_chi_betaT(self.cache_dir,max_chi_T, chi_b_0, chi_abar_T, method='cosine') # precalculate chi beta schedules for dynamic T
 
 
         # amino acid decoding schedule 

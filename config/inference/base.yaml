@@ -111,6 +111,7 @@ diffuser:
   max_b: 2.5
   min_sigma: 0.02
   max_sigma: 1.5
+  cache_dir: null
 
 seq_diffuser:
   s_b0: null

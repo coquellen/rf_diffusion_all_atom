@@ -73,6 +73,7 @@ class Sampler:
         self.potential_conf = self._conf.potentials
         self.diffuser_conf = self._conf.diffuser
         self.preprocess_conf = self._conf.preprocess
+        print(self._conf.diffuser.cache_dir)
         self.diffuser = Diffuser(**self._conf.diffuser)
         self.model_adaptor = aa_model.Model(self._conf)
         # Temporary hack
