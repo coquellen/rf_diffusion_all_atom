@@ -319,7 +319,7 @@ class Denoise():
                  potential_manager=None,
                  softmax_T=1e-5,
                  partial_T=None,
-                 cahce_dir=None):
+                 cache_dir=None):
         """
         
         Parameters:
